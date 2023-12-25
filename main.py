@@ -1,4 +1,5 @@
 from Birds_obstacles_ground import FlappingBird, Obstacle, Ground,display_game_interface
+from saving import load_value, save_value
 import pygame
 pygame.init()
 # Define window dimensions and font
@@ -6,42 +7,53 @@ WIN_WIDTH = 600
 WIN_HEIGHT = 800
 game_font = pygame.font.SysFont("arial", 50)
 
-def play(easy,medium):
+def play(easy,medium,lives,score):
     """Main Driver of the game."""
     # Initialize game state
 
+    
+    file_name="values.txt" #Name of the file to save the highest score.
+
+    
     if easy:
         obstacle_interval=700
         gap=400
     elif medium:
         obstacle_interval=650
         gap=330
+        
     else:
         obstacle_interval=600
         gap=250
+        
+        
     flying = False
     bird = FlappingBird(230, 350)
     base = Ground(730)
     obstacles = [Obstacle(700,gap)]
 
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-    score = 0
 
     clock = pygame.time.Clock()
     
     preparations=True
+
+    maximum_score=load_value(file_name)
+
+    
     
     while preparations:
         # So as to make the game not start playing before the user is ready by clicking the left side of the mouse.
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN  and event.button == 1:
                 preparations=False
-        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score)
+        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score,lives,maximum_score)
 
 
     run = True
-
+    
     while run:
+        
         clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -54,6 +66,11 @@ def play(easy,medium):
 
         for obstacle in obstacles:
             if obstacle.check_collision(bird):
+                if lives>0:
+                    # Used recursions to keep replaying as long as lives is not negative
+                    lives-=1
+                    play(easy,medium,lives,score)
+                    
                 run = False
 
             if obstacle.x + obstacle.inverted_top_image.get_width() < 0:
@@ -73,11 +90,19 @@ def play(easy,medium):
             obstacles.remove(r)
 
         if bird.y + bird.display_image.get_height() >= 730 or bird.initial_height <= 0:
+            if lives>0:
+                lives-=1
+                play(easy,medium,lives,score)
+                
             break
 
         base.move()
         bird.move()
-        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score)
+        maximum_score=load_value(file_name)
+        if score>maximum_score:
+            save_value(score,file_name)
+
+        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score,lives,maximum_score)
 
     pygame.quit()
     quit()
@@ -90,13 +115,14 @@ def main():
     print("If `MEDIUM` enter `M`.")
     print("If `HARD` enter `H`.")
     difficulty_level=input("Enter your choice:- ")
-
+    lives=3
+    score=0
     if difficulty_level[0].lower()== "e":
-        play(True,False)
+        play(True,False,lives,score)
     elif difficulty_level[0].lower()== "m":
-        play(False,True)
+        play(False,True,lives,score)
     elif difficulty_level[0].lower()== "h":
-        play(False,False)
+        play(False,False,lives,score)
     else:
         print("Invalid Input.")
 
