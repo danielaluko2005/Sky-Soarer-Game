@@ -216,7 +216,7 @@ class Ground:
         display_surface.blit(self.IMAGE, (self.x2, self.y))
 
 
-def display_game_interface(surface,WINDOW_WIDTH,game_font, player, obstacles, ground, player_score,lives_score,highest_score):
+def display_game_interface(surface,WINDOW_WIDTH,game_font, player, obstacles, ground, player_score,lives_score,highest_score,difficulty):
     """
     Display the game interface.
 
@@ -230,6 +230,7 @@ def display_game_interface(surface,WINDOW_WIDTH,game_font, player, obstacles, gr
     - player_score (int): The current player score.
     - lives_score (int): The lives left.
     - highest_score(int): Highest score so far in the game history.
+    - difficulty(str):  The difficulty level.
     """
     surface.blit(background_image, (0, 0))
 
@@ -246,7 +247,7 @@ def display_game_interface(surface,WINDOW_WIDTH,game_font, player, obstacles, gr
     surface.blit(score_display, (WINDOW_WIDTH - score_display.get_width() - 15, 10))
     surface.blit(lives_display,  (10, 10))
 
-    maximum_score_display = game_font.render("Highest Score: " + str(highest_score),1,(255,255,255))
+    maximum_score_display = game_font.render(f"Highest Score for {difficulty}: " + str(highest_score),1,(255,255,255))
 
     surface.blit(maximum_score_display, (10, 50))
 

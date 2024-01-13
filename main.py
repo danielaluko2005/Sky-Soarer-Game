@@ -1,5 +1,5 @@
 from Birds_obstacles_ground import FlappingBird, Obstacle, Ground,display_game_interface
-from saving import load_value, save_value
+from saving import load_value, edit_file_line
 import pygame
 pygame.init()
 # Define window dimensions and font
@@ -18,13 +18,19 @@ def play(easy,medium,lives,score):
     if easy:
         obstacle_interval=700
         gap=400
+        difficulty_number=1
+        difficulty="easy"
     elif medium:
         obstacle_interval=650
         gap=330
-        
+        difficulty_number=2
+        difficulty="medium"   
     else:
         obstacle_interval=600
         gap=250
+        difficulty_number=3
+        difficulty="hard"
+
         
         
     flying = False
@@ -38,7 +44,7 @@ def play(easy,medium,lives,score):
     
     preparations=True
 
-    maximum_score=load_value(file_name)
+    maximum_score=load_value(file_name,difficulty_number)
 
     
     
@@ -47,7 +53,7 @@ def play(easy,medium,lives,score):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN  and event.button == 1:
                 preparations=False
-        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score,lives,maximum_score)
+        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score,lives,maximum_score,difficulty)
 
 
     run = True
@@ -95,14 +101,15 @@ def play(easy,medium,lives,score):
                 play(easy,medium,lives,score)
                 
             break
+        
 
         base.move()
         bird.move()
-        maximum_score=load_value(file_name)
-        if score>maximum_score:
-            save_value(score,file_name)
+        maximum_score=load_value(file_name,difficulty_number)
+        if score>int(maximum_score):
+            edit_file_line(file_name,difficulty_number,score)
 
-        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score,lives,maximum_score)
+        display_game_interface(win, WIN_WIDTH, game_font, bird, obstacles, base, score,lives,maximum_score,difficulty)
 
     pygame.quit()
     quit()
