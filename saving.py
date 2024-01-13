@@ -14,7 +14,7 @@ def edit_file_line(file_path, line_number, new_text):
 
     # Perform the edit in memory
     if 1 <= line_number <= len(lines):
-        lines[line_number - 1] = new_text + '\n'
+        lines[line_number - 1] = str(new_text) + '\n'
 
         # Write the modified content back to the file
         with open(file_path, 'w') as file:
