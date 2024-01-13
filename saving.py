@@ -25,7 +25,6 @@ def edit_file_line(file_path, line_number, new_text):
 
 
 
-edit_file_line(file_path,2,str(3))
 
 
 def load_value(file_path,line_number):
