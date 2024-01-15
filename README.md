@@ -32,6 +32,8 @@ Pipe Class: Defines the pipes as obstacles, with methods for movement and collis
 Ground Class: Manages the scrolling ground to simulate forward movement.
 
 # How to Play
+Go to main.py and run the code.
+
 Press the space bar or click the mouse to make the bird flap and navigate through the pipes.
 
 Score points for each successfully passed pipe.
